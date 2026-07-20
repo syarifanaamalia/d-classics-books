@@ -14,6 +14,16 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     String[] titles, authors, prices;
     int[] images;
 
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public BookAdapter(String[] titles, String[] authors, String[] prices, int[] images) {
         this.titles = titles;
         this.authors = authors;
@@ -26,7 +36,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_book, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, listener);
     }
 
     @Override
@@ -56,13 +66,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         ImageView imgBook, imgRating;
         TextView tvTitle, tvAuthor, tvPrice;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
+
             imgBook = itemView.findViewById(R.id.imgBook);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
             tvPrice = itemView.findViewById(R.id.tvPrice);
-            imgRating = itemView.findViewById(R.id.imgRating); // ⭐ TAMBAHAN
+            imgRating = itemView.findViewById(R.id.imgRating);
+
+            itemView.setOnClickListener(v -> {
+                if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(getAdapterPosition());
+                }
+            });
         }
     }
 }

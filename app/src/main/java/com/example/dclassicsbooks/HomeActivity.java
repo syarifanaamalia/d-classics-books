@@ -58,10 +58,14 @@ public class HomeActivity extends AppCompatActivity {
         String username = prefs.getString("USERNAME", "User");
         tvGreeting.setText("Hello, " + username + "!");
 
-        int[] images = { R.drawable.banner1, R.drawable.banner2, R.drawable.banner3 };
+        int[] images = {
+                R.drawable.banner1,
+                R.drawable.banner2,
+                R.drawable.banner3
+        };
 
-        BannerAdapter adapter = new BannerAdapter(images);
-        viewPager2.setAdapter(adapter);
+        BannerAdapter bannerAdapter = new BannerAdapter(images);
+        viewPager2.setAdapter(bannerAdapter);
 
         viewPager2.setPageTransformer((page, position) -> {
             page.setAlpha(0.7f + (1 - Math.abs(position)));
@@ -73,18 +77,23 @@ public class HomeActivity extends AppCompatActivity {
 
         btnNext.setOnClickListener(v -> {
             int next = viewPager2.getCurrentItem() + 1;
-            if (next < adapter.getItemCount()) viewPager2.setCurrentItem(next);
+            if (next < bannerAdapter.getItemCount()) {
+                viewPager2.setCurrentItem(next);
+            }
         });
 
         btnPrev.setOnClickListener(v -> {
             int prev = viewPager2.getCurrentItem() - 1;
-            if (prev >= 0) viewPager2.setCurrentItem(prev);
+            if (prev >= 0) {
+                viewPager2.setCurrentItem(prev);
+            }
         });
 
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 int last = viewPager2.getAdapter().getItemCount() - 1;
+
                 if (position == 0) {
                     btnPrev.setBackgroundResource(R.drawable.bg_button_prev_inactive);
                     btnNext.setBackgroundResource(R.drawable.bg_button_next);
@@ -101,13 +110,70 @@ public class HomeActivity extends AppCompatActivity {
         btnPrev.setBackgroundResource(R.drawable.bg_button_prev_inactive);
         btnNext.setBackgroundResource(R.drawable.bg_button_next);
 
-        String[] titles = { "The Floating World", "The Psychology of Money", "The Hobbit", "The Blanket Cats" };
-        String[] authors = { "Axie Oh", "Morgan Housel", "J. R. R. Tolkien", "Kiyoshi Shigematsu" };
-        String[] prices = { "Rp125.000", "Rp110.000", "Rp230.000", "Rp150.000" };
-        int[] bookImages = { R.drawable.the_floating_world, R.drawable.the_psychology_of_money, R.drawable.the_hobbit, R.drawable.the_blanket_cats };
+        String[] titles = {
+                "The Floating World",
+                "The Psychology of Money",
+                "The Hobbit",
+                "The Blanket Cats"
+        };
 
+        String[] authors = {
+                "Axie Oh",
+                "Morgan Housel",
+                "J. R. R. Tolkien",
+                "Kiyoshi Shigematsu"
+        };
+
+        String[] prices = {
+                "Rp125.000",
+                "Rp110.000",
+                "Rp230.000",
+                "Rp150.000"
+        };
+
+        int[] bookImages = {
+                R.drawable.the_floating_world,
+                R.drawable.the_psychology_of_money,
+                R.drawable.the_hobbit,
+                R.drawable.the_blanket_cats
+        };
+
+        int[] ratingImages = {
+                R.drawable.rating4,
+                R.drawable.rating5,
+                R.drawable.rating4,
+                R.drawable.rating4
+        };
+
+        String[] categories = {
+                "Fiction",
+                "Non-Fiction",
+                "Fiction",
+                "Fiction"
+        };
+
+        String[] synopsis = {
+                "A cyberpunk-inspired sci-fi adventure where a young woman must navigate a dangerous city and confront her past to survive in a unforgiving world.",
+                "The Psychology of Money by Morgan Housel explains that financial success is not just about knowledge or intelligence, but largely about behavior and how people manage their emotions around money.",
+                "The classic fantasy novel about Bilbo Baggins, a comfort-loving hobbit whose quiet life is turned upside down when he joins the wizard Gandalf and thirteen dwarves on a journey to reclaim treasure.",
+                "In a small shop in Tokyo, a unique pet shop allows customers to rent special cats known as the Blanket Cats for three days and two nights to help them navigate life challenges."
+        };
+
+        BookAdapter bookAdapter = new BookAdapter(titles, authors, prices, bookImages);
         rvBooks.setLayoutManager(new LinearLayoutManager(this));
-        rvBooks.setAdapter(new BookAdapter(titles, authors, prices, bookImages));
+        rvBooks.setAdapter(bookAdapter);
+
+        bookAdapter.setOnItemClickListener(position -> {
+            Intent intent = new Intent(HomeActivity.this, BookDetailActivity.class);
+            intent.putExtra("title", titles[position]);
+            intent.putExtra("author", authors[position]);
+            intent.putExtra("price", prices[position]);
+            intent.putExtra("image", bookImages[position]);
+            intent.putExtra("ratingImage", ratingImages[position]);
+            intent.putExtra("category", categories[position]);
+            intent.putExtra("synopsis", synopsis[position]);
+            startActivity(intent);
+        });
 
         btnMenuStore.setOnClickListener(v -> startActivity(new Intent(HomeActivity.this, StoresActivity.class)));
 
@@ -117,6 +183,7 @@ public class HomeActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = getSharedPreferences("MyApp", MODE_PRIVATE).edit();
             editor.clear();
             editor.apply();
+
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finishAffinity();
         });

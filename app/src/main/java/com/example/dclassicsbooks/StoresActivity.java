@@ -27,6 +27,10 @@ public class StoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stores);
 
+        getWindow().getDecorView().setSystemUiVisibility(
+                android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        );
+
         drawerLayoutStore = findViewById(R.id.drawerLayoutStore);
         btnMenuStorePage = findViewById(R.id.btnMenuStorePage);
         btnCloseStorePage = findViewById(R.id.btnCloseStorePage);
