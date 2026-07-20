@@ -7,11 +7,17 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +33,15 @@ public class BooksActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_books);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayoutBooks), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         drawerLayoutBooks = findViewById(R.id.drawerLayoutBooks);
         btnMenuBooksPage = findViewById(R.id.btnMenuBooksPage);
@@ -46,6 +60,13 @@ public class BooksActivity extends AppCompatActivity {
         rvAllBooks.setAdapter(adapter);
 
         filter("Non-Fiction");
+        tabNonFiction.setBackgroundResource(R.drawable.edittext_bg);
+        tabNonFiction.getBackground().setTint(getColor(R.color.primary));
+        tabNonFiction.setTextColor(Color.WHITE);
+
+        tabFiction.setBackgroundResource(R.drawable.edittext_bg);
+        tabFiction.getBackground().setTintList(null);
+        tabFiction.setTextColor(Color.BLACK);
 
         btnMenuBooksPage.setOnClickListener(v -> drawerLayoutBooks.openDrawer(GravityCompat.START));
 
@@ -55,31 +76,44 @@ public class BooksActivity extends AppCompatActivity {
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         });
+
         btnNavStoreBooks.setOnClickListener(v -> {
             startActivity(new Intent(this, StoresActivity.class));
             finish();
         });
+
         btnNavLogoutBooks.setOnClickListener(v -> {
             SharedPreferences.Editor editor = getSharedPreferences("MyApp", MODE_PRIVATE).edit();
             editor.clear();
             editor.apply();
+
             startActivity(new Intent(this, LoginActivity.class));
             finishAffinity();
         });
 
         tabNonFiction.setOnClickListener(v -> {
-            tabNonFiction.setBackgroundColor(Color.parseColor("#2C4554"));
+            tabNonFiction.setBackgroundResource(R.drawable.edittext_bg);
+            tabNonFiction.getBackground().setTint(getColor(R.color.primary));
             tabNonFiction.setTextColor(Color.WHITE);
+
             tabFiction.setBackgroundResource(R.drawable.edittext_bg);
+            tabFiction.getBackground().setTintList(null);
             tabFiction.setTextColor(Color.BLACK);
+
             filter("Non-Fiction");
+
+
         });
 
         tabFiction.setOnClickListener(v -> {
-            tabFiction.setBackgroundColor(Color.parseColor("#2C4554"));
+            tabFiction.setBackgroundResource(R.drawable.edittext_bg);
+            tabFiction.getBackground().setTint(getColor(R.color.primary));
             tabFiction.setTextColor(Color.WHITE);
+
             tabNonFiction.setBackgroundResource(R.drawable.edittext_bg);
+            tabNonFiction.getBackground().setTintList(null);
             tabNonFiction.setTextColor(Color.BLACK);
+
             filter("Fiction");
         });
     }
@@ -104,9 +138,13 @@ public class BooksActivity extends AppCompatActivity {
 
     private void filter(String category) {
         List<Book> temp = new ArrayList<>();
+
         for (Book b : allBooksList) {
-            if (b.getCategory().equals(category)) temp.add(b);
+            if (b.getCategory().equals(category)) {
+                temp.add(b);
+            }
         }
+
         adapter.updateData(temp);
     }
 }

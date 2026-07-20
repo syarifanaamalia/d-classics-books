@@ -4,6 +4,7 @@
     android:id="@+id/drawerLayoutStore"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     tools:context=".StoresActivity">
 
     <LinearLayout
@@ -11,7 +12,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginStart="26dp"
-        android:layout_marginEnd="26dp">
+        android:layout_marginEnd="26dp"
+        android:paddingTop="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,17 +24,17 @@
                 android:id="@+id/btnMenuStorePage"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/menu"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bookstore"
-                android:fontFamily="@font/caudex_bold"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="28dp"
-                android:textSize="18sp"/>
+                android:fontFamily="@font/caudex_regular"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <View
